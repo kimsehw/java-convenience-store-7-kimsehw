@@ -10,7 +10,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class StockTest {
 
-    private final Stock stock = new Stock("콜라", 6);
+    private static final int TEST_QUANTITY = 6;
+    private static final String TEST_NAME = "콜라";
+
+    private final Stock stock = new Stock(TEST_NAME, TEST_QUANTITY);
 
     @DisplayName("재고 이름 확인 테스트")
     @ParameterizedTest
@@ -30,7 +33,7 @@ class StockTest {
     @DisplayName("재고 차감 테스트")
     @Test
     void isPurchasableTest() {
-        stock.isPurchasable(6);
+        stock.isPurchasable(TEST_QUANTITY);
         assertThat(stock.isPurchasable(1)).isFalse();
     }
 }
