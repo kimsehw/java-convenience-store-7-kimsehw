@@ -25,4 +25,9 @@ public class NormalProduct implements Product {
         quantity -= requestQuantity;
         return true;
     }
+
+    @Override
+    public int getQuantity() {
+        return quantity;
+    }
 }
