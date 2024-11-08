@@ -3,29 +3,29 @@ package store.model.domain;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
+import store.model.domain.product.Product;
+import store.model.domain.product.ProductFactory;
 
 public class StockManager {
 
-    private static final String SEPARATOR = ",";
+    public static final String PRODUCTS_FILE_PATH = "src/main/resources/products.md";
 
-    private final List<Product> stock = new ArrayList<>();
+    private List<Product> stock;
 
-    public void readProductsFrom(String productsFilePath) throws IOException {
-        List<String> products = Files.readAllLines(Path.of(productsFilePath));
-        products.removeFirst(); // 첫 라인(헤더) 제거
-        organizeStock(products);
+    public StockManager() throws IOException {
+        readProductsFrom();
     }
 
-    private void organizeStock(List<String> products) {
-        for (String productInformation : products) {
-            List<String> productData = List.of(productInformation.split(SEPARATOR));
-            String name = productData.get(0);
-            int price = Integer.parseInt(productData.get(1));
-            String promotion = productData.get(3);
-            int quantity = Integer.parseInt(productData.get(2));
-            stock.add(new Product(name, price, quantity, promotion));
-        }
+    private void readProductsFrom() throws IOException {
+        List<String> productsInformation = Files.readAllLines(Path.of(PRODUCTS_FILE_PATH));
+        productsInformation.removeFirst(); // 첫 라인(헤더) 제거
+        stock = organizeStock(productsInformation);
+    }
+
+    private List<Product> organizeStock(List<String> productsInformation) {
+        return productsInformation.stream()
+                .map(ProductFactory::createProduct)
+                .toList();
     }
 }
