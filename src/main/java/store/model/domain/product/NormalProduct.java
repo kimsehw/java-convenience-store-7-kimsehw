@@ -14,10 +14,7 @@ public class NormalProduct implements Product {
 
     @Override
     public boolean isProductOf(String productName) {
-        if (name.equals(productName)) {
-            return true;
-        }
-        return false;
+        return name.equals(productName);
     }
 
     @Override
