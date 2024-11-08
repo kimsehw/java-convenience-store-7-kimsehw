@@ -1,5 +1,10 @@
 package store.model.domain;
 
+import camp.nextstep.edu.missionutils.DateTimes;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Promotion {
 
     private final int buy;
@@ -12,5 +17,13 @@ public class Promotion {
         this.get = get;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public boolean isOnPromotion() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime startDate = LocalDate.parse(this.startDate, formatter).atStartOfDay();
+        LocalDateTime endDate = LocalDate.parse(this.endDate, formatter).atStartOfDay();
+        LocalDateTime today = DateTimes.now();
+        return (today.isAfter(startDate) && today.isBefore(endDate));
     }
 }
