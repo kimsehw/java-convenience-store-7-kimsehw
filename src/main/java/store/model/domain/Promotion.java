@@ -28,4 +28,9 @@ public class Promotion {
         LocalDateTime today = DateTimes.now();
         return (today.isAfter(startDate) && today.isBefore(endDate));
     }
+
+    public int discount(int requestQuantity) {
+        int freeAmount = (requestQuantity / buy) * get;
+        return requestQuantity + freeAmount;
+    }
 }
