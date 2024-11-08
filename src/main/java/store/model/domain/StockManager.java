@@ -9,51 +9,65 @@ import java.util.List;
 import java.util.Map;
 import store.model.domain.product.Product;
 import store.model.domain.product.ProductFactory;
+import store.model.domain.product.Products;
 
 public class StockManager {
 
     public static final String PRODUCTS_FILE_PATH = "src/main/resources/products.md";
     public static final String PROMOTIONS_FILE_PATH = "src/main/resources/promotions.md";
+    public static final String SEPARATOR = ",";
 
-    private List<Product> stock;
+    private Map<String, Products> stock;
     private Map<String, Promotion> promotions;
 
     public StockManager() throws IOException {
-        readProductsFrom();
         readPromotionsFrom();
+        readProductsFrom();
     }
 
-    private void readProductsFrom() throws IOException {
-        List<String> productsInformation = Files.readAllLines(Path.of(PRODUCTS_FILE_PATH));
-        productsInformation.removeFirst(); // 첫 라인(헤더) 제거
-        stock = organizeStock(productsInformation);
+    public void readProductsFrom() throws IOException {
+        List<String> productsData = Files.readAllLines(Path.of(PRODUCTS_FILE_PATH));
+        productsData.removeFirst(); // 첫 라인(헤더) 제거
+        this.stock = organizeStock(productsData);
     }
 
-    private List<Product> organizeStock(List<String> productsInformation) {
-        return productsInformation.stream()
-                .map(ProductFactory::createProduct)
-                .toList();
+    private Map<String, Products> organizeStock(List<String> productsData) {
+        Map<String, Products> stock = new HashMap<>();
+        productsData.forEach(productData -> putStock(stock, productData));
+        return Collections.unmodifiableMap(stock);
+    }
+
+    private void putStock(Map<String, Products> stock, String productData) {
+        List<String> productInformation = List.of(productData.split(SEPARATOR));
+        Product product = ProductFactory.createProductFrom(productInformation, promotions);
+        String name = productInformation.get(0);
+        if (!stock.containsKey(name)) {
+            stock.put(name, new Products(product));
+        }
+        if (stock.containsKey(name)) {
+            stock.get(name).add(product);
+        }
     }
 
     private void readPromotionsFrom() throws IOException {
-        List<String> promotionsInformation = Files.readAllLines(Path.of(PROMOTIONS_FILE_PATH));
-        promotionsInformation.removeFirst(); // 첫 라인(헤더) 제거
-        promotions = organizePromotions(promotionsInformation);
+        List<String> promotionsData = Files.readAllLines(Path.of(PROMOTIONS_FILE_PATH));
+        promotionsData.removeFirst(); // 첫 라인(헤더) 제거
+        promotions = organizePromotions(promotionsData);
     }
 
-    private Map<String, Promotion> organizePromotions(List<String> promotionsInformation) {
+    private Map<String, Promotion> organizePromotions(List<String> promotionsData) {
         Map<String, Promotion> promotions = new HashMap<>();
-        promotionsInformation.forEach(promotionInformation -> putPromotion(promotions, promotionInformation));
+        promotionsData.forEach(promotionData -> putPromotion(promotions, promotionData));
         return Collections.unmodifiableMap(promotions);
     }
 
-    private void putPromotion(Map<String, Promotion> promotions, String promotionInformation) {
-        List<String> promotionData = List.of(promotionInformation.split(","));
-        String name = promotionData.get(0);
-        int buy = Integer.parseInt(promotionData.get(1));
-        int get = Integer.parseInt(promotionData.get(2));
-        String startDate = promotionData.get(3);
-        String endDate = promotionData.get(4);
+    private void putPromotion(Map<String, Promotion> promotions, String promotionData) {
+        List<String> promotionInformation = List.of(promotionData.split(","));
+        String name = promotionInformation.get(0);
+        int buy = Integer.parseInt(promotionInformation.get(1));
+        int get = Integer.parseInt(promotionInformation.get(2));
+        String startDate = promotionInformation.get(3);
+        String endDate = promotionInformation.get(4);
         promotions.put(name, new Promotion(buy, get, startDate, endDate));
     }
 }
