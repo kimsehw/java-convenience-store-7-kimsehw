@@ -2,6 +2,7 @@ package store.model.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
+import static org.assertj.core.api.InstanceOfAssertFactories.MAP;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,4 +29,14 @@ class StockManagerTest {
         assertThat(stockManager).extracting("stock").asInstanceOf(LIST)
                 .hasSize((int) productsCount - HEADER_LINE_COUNT);
     }
+
+    @DisplayName("행사 목록 불러오기 테스트")
+    @Test
+    void readPromotionsTest() throws IOException {
+        long productsCount = Files.lines(Path.of(StockManager.PROMOTIONS_FILE_PATH)).count();
+        assertThat(stockManager).extracting("promotions").asInstanceOf(MAP)
+                .hasSize((int) productsCount - HEADER_LINE_COUNT);
+    }
+
+
 }
