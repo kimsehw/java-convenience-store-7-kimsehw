@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Promotion {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     private final int buy;
     private final int get;
     private final String startDate;
@@ -20,7 +22,7 @@ public class Promotion {
     }
 
     public boolean isOnPromotion() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         LocalDateTime startDate = LocalDate.parse(this.startDate, formatter).atStartOfDay();
         LocalDateTime endDate = LocalDate.parse(this.endDate, formatter).atStartOfDay();
         LocalDateTime today = DateTimes.now();
