@@ -29,8 +29,24 @@ public class Promotion {
         return (today.isAfter(startDate) && today.isBefore(endDate));
     }
 
-    public int discount(int requestQuantity) {
-        int freeAmount = (requestQuantity / buy) * get;
-        return requestQuantity + freeAmount;
+    public PurchaseResponse discount(int requestQuantity, int stockQuantity) {
+        int promotionCount = requestQuantity / (buy + get);
+        int partialCount = requestQuantity % (buy + get);
+        if (requestQuantity > stockQuantity) {
+            promotionCount = stockQuantity / (buy + get);
+            partialCount = stockQuantity % (buy + get) + (requestQuantity - stockQuantity);
+            return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, partialCount);
+        }
+        if (partialCount == 0) {
+            return new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, promotionCount, partialCount);
+        }
+        if (partialCount == buy) {
+            if (requestQuantity == stockQuantity) {
+                return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount,
+                        partialCount);
+            }
+            return new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, promotionCount, partialCount);
+        }
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, partialCount);
     }
 }
