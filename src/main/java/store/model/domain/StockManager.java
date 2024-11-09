@@ -41,6 +41,10 @@ public class StockManager {
         List<String> productInformation = List.of(productData.split(SEPARATOR));
         Product product = ProductFactory.createProductFrom(productInformation, promotions);
         String name = productInformation.get(0);
+        addProduct(stock, name, product);
+    }
+
+    private void addProduct(Map<String, Products> stock, String name, Product product) {
         if (!stock.containsKey(name)) {
             stock.put(name, new Products(product));
         }
@@ -69,5 +73,17 @@ public class StockManager {
         String startDate = promotionInformation.get(3);
         String endDate = promotionInformation.get(4);
         promotions.put(name, new Promotion(buy, get, startDate, endDate));
+    }
+
+    public PurchaseResponse getPurchaseResponseFrom(String requestProductName, int requestQuantity) {
+        Products products = stock.get(requestProductName);
+        if (products == null) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+        }
+        PurchaseResponse purchaseResponse = products.checkQuantity(requestQuantity);
+        if (purchaseResponse.getPurchaseResponseCode().equals(PurchaseResponseCode.OUT_OF_STOCK)) {
+            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+        }
+        return purchaseResponse;
     }
 }
