@@ -2,6 +2,8 @@ package store.model.domain.product;
 
 import java.util.Arrays;
 import java.util.List;
+import store.model.domain.PurchaseResponse;
+import store.model.domain.PurchaseResponseCode;
 
 public class Products {
 
@@ -24,8 +26,19 @@ public class Products {
         if (product instanceof PromotionProduct) {
             products.set(PROMOTION_INDEX, product);
         }
-        if (products instanceof NormalProduct) {
+        if (product instanceof NormalProduct) {
             products.set(NORMAL_INDEX, product);
         }
+    }
+
+    public PurchaseResponse checkQuantity(int requestQuantity) {
+        if (totalQuantity < requestQuantity) {
+            return new PurchaseResponse(PurchaseResponseCode.OUT_OF_STOCK, 0, requestQuantity);
+        }
+        Product product = products.getFirst();
+        if (product != null) {
+            return product.isPurchasable(requestQuantity);
+        }
+        return new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, 0, requestQuantity);
     }
 }
