@@ -3,12 +3,12 @@ package store.model.domain;
 public class PurchaseResponse {
     private PurchaseResponseCode purchaseResponseCode;
     private int promotionCount;
-    private int partialCount;
+    private int restCount;
 
-    public PurchaseResponse(PurchaseResponseCode purchaseResponseCode, int promotionCount, int partialCount) {
+    public PurchaseResponse(PurchaseResponseCode purchaseResponseCode, int promotionCount, int restCount) {
         this.purchaseResponseCode = purchaseResponseCode;
         this.promotionCount = promotionCount;
-        this.partialCount = partialCount;
+        this.restCount = restCount;
     }
 
     public PurchaseResponseCode getPurchaseResponseCode() {
@@ -27,11 +27,11 @@ public class PurchaseResponse {
         this.promotionCount = promotionCount;
     }
 
-    public int getPartialCount() {
-        return partialCount;
+    public int getRestCount() {
+        return restCount;
     }
 
-    public void setPartialCount(int partialCount) {
-        this.partialCount = partialCount;
+    public void setRestCount(int restCount) {
+        this.restCount = restCount;
     }
 }

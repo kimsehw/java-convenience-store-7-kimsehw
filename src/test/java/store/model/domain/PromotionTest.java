@@ -41,10 +41,10 @@ class PromotionTest {
             "3,1,5,3,PROMOTION_PARTIAL_AVAILABLE,0,5",
             "3,1,3,4,FREE_PRODUCT_REMIND,0,3"})
     void discountTest(int buy, int get, int requestQuantity, int stockQuantity, PurchaseResponseCode expectedCode,
-                      int expectedPromotionCount, int expectedPartialCount) {
+                      int expectedPromotionCount, int expectedRestCount) {
         Promotion testPromotion = new Promotion(buy, get, null, null);
         assertThat(testPromotion.discount(requestQuantity, stockQuantity))
-                .extracting("purchaseResponseCode", "promotionCount", "partialCount")
-                .containsExactly(expectedCode, expectedPromotionCount, expectedPartialCount);
+                .extracting("purchaseResponseCode", "promotionCount", "restCount")
+                .containsExactly(expectedCode, expectedPromotionCount, expectedRestCount);
     }
 }

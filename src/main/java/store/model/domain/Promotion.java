@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class Promotion {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final int NO_PARTIAL = 0;
 
     private final int buy;
     private final int get;
@@ -31,22 +32,66 @@ public class Promotion {
 
     public PurchaseResponse discount(int requestQuantity, int stockQuantity) {
         int promotionCount = requestQuantity / (buy + get);
-        int partialCount = requestQuantity % (buy + get);
-        if (requestQuantity > stockQuantity) {
-            promotionCount = stockQuantity / (buy + get);
-            partialCount = stockQuantity % (buy + get) + (requestQuantity - stockQuantity);
-            return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, partialCount);
+        int restCount = requestQuantity % (buy + get);
+        return getResponse(requestQuantity, stockQuantity, promotionCount, restCount);
+    }
+
+    private PurchaseResponse getResponse(int requestQuantity, int stockQuantity, int promotionCount, int restCount) {
+        if (isInsufficientStock(requestQuantity, stockQuantity)) {
+            return responseInsufficientStock(requestQuantity, stockQuantity);
         }
-        if (partialCount == 0) {
-            return new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, promotionCount, partialCount);
+        if (isSuccessPromotionPurchase(restCount)) {
+            return responseSuccessPromotionPurchase(promotionCount, restCount);
         }
-        if (partialCount == buy) {
-            if (requestQuantity == stockQuantity) {
-                return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount,
-                        partialCount);
-            }
-            return new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, promotionCount, partialCount);
+        if (isNeedFreeRemind(restCount)) {
+            return responseInsufficientFreeStockOrFreeRemind(requestQuantity, stockQuantity, promotionCount, restCount);
         }
-        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, partialCount);
+        return responsePartialAvailable(promotionCount, restCount);
+    }
+
+    private PurchaseResponse responsePartialAvailable(int promotionCount, int restCount) {
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, restCount);
+    }
+
+    private boolean isInsufficientStock(int requestQuantity, int stockQuantity) {
+        return requestQuantity > stockQuantity;
+    }
+
+    private PurchaseResponse responseInsufficientStock(int requestQuantity, int stockQuantity) {
+        int promotionCount = stockQuantity / (buy + get);
+        int restCount = stockQuantity % (buy + get) + (requestQuantity - stockQuantity);
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, restCount);
+    }
+
+    private boolean isSuccessPromotionPurchase(int restCount) {
+        return restCount == NO_PARTIAL;
+    }
+
+    private PurchaseResponse responseSuccessPromotionPurchase(int promotionCount, int restCount) {
+        return new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, promotionCount, restCount);
+    }
+
+    private boolean isNeedFreeRemind(int restCount) {
+        return restCount == buy;
+    }
+
+    private boolean isInsufficientFreeStock(int requestQuantity, int stockQuantity) {
+        return requestQuantity == stockQuantity;
+    }
+
+    private PurchaseResponse responseInsufficientFreeStockOrFreeRemind(int requestQuantity, int stockQuantity,
+                                                                       int promotionCount, int restCount) {
+        if (isInsufficientFreeStock(requestQuantity, stockQuantity)) {
+            return responseInsufficientFreeStock(promotionCount, restCount);
+        }
+        return responseFreeRemind(promotionCount, restCount);
+    }
+
+    private PurchaseResponse responseInsufficientFreeStock(int promotionCount, int restCount) {
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, restCount);
+    }
+
+    private PurchaseResponse responseFreeRemind(int promotionCount, int restCount) {
+        return new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, promotionCount, restCount);
     }
 }
