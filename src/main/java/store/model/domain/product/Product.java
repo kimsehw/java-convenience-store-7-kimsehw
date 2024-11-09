@@ -1,9 +1,13 @@
 package store.model.domain.product;
 
+import store.model.domain.PurchaseResponseCode;
+
 public interface Product {
     boolean isProductOf(String productName);
 
     int getQuantity();
 
-    boolean isPurchasable(int requestQuantity);
+    PurchaseResponseCode isPurchasable(int requestQuantity);
+
+    void reduce(int requestQuantity);
 }

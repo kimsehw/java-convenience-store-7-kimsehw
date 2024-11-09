@@ -26,15 +26,17 @@ class NormalProductTest {
 
     @DisplayName("구매 가능 여부 확인 테스트")
     @ParameterizedTest
-    @CsvSource({"6,true", "7,false"})
-    void isPurchasableTest(int requestQuantity, boolean expected) {
+    @CsvSource({"6,PURCHASE_SUCCESS", "7,OUT_OF_STOCK"})
+    void isPurchasableTest(int requestQuantity, PurchaseResponseCode expected) {
         assertThat(normalProduct.isPurchasable(requestQuantity)).isEqualTo(expected);
     }
 
     @DisplayName("재고 차감 테스트")
     @Test
     void isPurchasableTest() {
-        normalProduct.isPurchasable(TEST_QUANTITY);
-        assertThat(normalProduct.isPurchasable(1)).isFalse();
+        int requestQuantity = 3;
+        normalProduct.reduce(requestQuantity);
+        int expected = TEST_QUANTITY - requestQuantity;
+        assertThat(normalProduct.getQuantity()).isEqualTo(expected);
     }
 }

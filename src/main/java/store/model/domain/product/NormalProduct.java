@@ -1,5 +1,7 @@
 package store.model.domain.product;
 
+import store.model.domain.PurchaseResponseCode;
+
 public class NormalProduct implements Product {
 
     private final String name;
@@ -18,12 +20,16 @@ public class NormalProduct implements Product {
     }
 
     @Override
-    public boolean isPurchasable(int requestQuantity) {
+    public PurchaseResponseCode isPurchasable(int requestQuantity) {
         if (quantity < requestQuantity) {
-            return false;
+            return PurchaseResponseCode.OUT_OF_STOCK;
         }
+        return PurchaseResponseCode.PURCHASE_SUCCESS;
+    }
+
+    @Override
+    public void reduce(int requestQuantity) {
         quantity -= requestQuantity;
-        return true;
     }
 
     @Override
