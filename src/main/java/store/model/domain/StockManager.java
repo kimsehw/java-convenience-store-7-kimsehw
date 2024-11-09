@@ -62,7 +62,7 @@ public class StockManager {
     }
 
     private void putPromotion(Map<String, Promotion> promotions, String promotionData) {
-        List<String> promotionInformation = List.of(promotionData.split(","));
+        List<String> promotionInformation = List.of(promotionData.split(SEPARATOR));
         String name = promotionInformation.get(0);
         int buy = Integer.parseInt(promotionInformation.get(1));
         int get = Integer.parseInt(promotionInformation.get(2));
