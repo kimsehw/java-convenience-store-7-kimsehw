@@ -1,6 +1,7 @@
 package store.model.domain.product;
 
 import store.model.domain.Promotion;
+import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
 
 public class PromotionProduct implements Product {
@@ -23,8 +24,11 @@ public class PromotionProduct implements Product {
     }
 
     @Override
-    public PurchaseResponseCode isPurchasable(int requestQuantity) {
-        return PurchaseResponseCode.PURCHASE_SUCCESS;
+    public PurchaseResponse isPurchasable(int requestQuantity) {
+        if (promotion.isOnPromotion()) {
+            return promotion.discount(requestQuantity, quantity);
+        }
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, 0, requestQuantity);
     }
 
     @Override
