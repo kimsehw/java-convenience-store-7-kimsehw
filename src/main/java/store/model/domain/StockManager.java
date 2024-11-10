@@ -42,7 +42,7 @@ public class StockManager {
     private void putStock(Map<String, Products> stock, String productData) {
         List<String> productInformation = List.of(productData.split(SEPARATOR));
         Product product = ProductFactory.createProductFrom(productInformation, promotions);
-        String name = productInformation.get(0);
+        String name = productInformation.getFirst();
         addProduct(stock, name, product);
     }
 
@@ -69,12 +69,8 @@ public class StockManager {
 
     private void putPromotion(Map<String, Promotion> promotions, String promotionData) {
         List<String> promotionInformation = List.of(promotionData.split(SEPARATOR));
-        String name = promotionInformation.get(0);
-        int buy = Integer.parseInt(promotionInformation.get(1));
-        int get = Integer.parseInt(promotionInformation.get(2));
-        String startDate = promotionInformation.get(3);
-        String endDate = promotionInformation.get(4);
-        promotions.put(name, new Promotion(buy, get, startDate, endDate));
+        String name = promotionInformation.getFirst();
+        promotions.put(name, new Promotion(promotionInformation));
     }
 
     public PurchaseResponse getPurchaseResponseFrom(String requestProductName, int requestQuantity) {
@@ -98,5 +94,9 @@ public class StockManager {
         if (isOverStock) {
             throw new InputException(ExceptionType.OVER_STOCK_AMOUNT);
         }
+    }
+
+    public Map<String, Products> getStock() {
+        return this.stock;
     }
 }

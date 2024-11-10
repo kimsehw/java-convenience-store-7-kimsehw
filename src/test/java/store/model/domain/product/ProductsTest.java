@@ -3,6 +3,7 @@ package store.model.domain.product;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
 
+import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ class ProductsTest {
     @ParameterizedTest
     @MethodSource("generatePurchaseCase")
     void checkQuantityTest(String startDate, String endDate, int requestQuantity, PurchaseResponseCode expectedCode) {
-        Promotion promotion = new Promotion(2, 1, startDate, endDate);
+        Promotion promotion = new Promotion(List.of("2+1", "2", "1", startDate, endDate));
         promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_PROMOTION_QUANTITY, promotion);
         products = new Products(promotionProduct);
         products.add(normalProduct);

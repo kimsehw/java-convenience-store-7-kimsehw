@@ -4,6 +4,7 @@ import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Promotion {
 
@@ -12,20 +13,20 @@ public class Promotion {
 
     private final int buy;
     private final int get;
-    private final String startDate;
-    private final String endDate;
+    private final List<String> promotionInformation;
 
-    public Promotion(int buy, int get, String startDate, String endDate) {
-        this.buy = buy;
-        this.get = get;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public Promotion(List<String> promotionInformation) {
+        this.promotionInformation = promotionInformation;
+        this.buy = Integer.parseInt(promotionInformation.get(1));
+        this.get = Integer.parseInt(promotionInformation.get(2));
     }
 
     public boolean isOnPromotion() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-        LocalDateTime startDate = LocalDate.parse(this.startDate, formatter).atStartOfDay();
-        LocalDateTime endDate = LocalDate.parse(this.endDate, formatter).atStartOfDay();
+        String startDateInformation = promotionInformation.get(3);
+        LocalDateTime startDate = LocalDate.parse(startDateInformation, formatter).atStartOfDay();
+        String endDateInformation = promotionInformation.get(4);
+        LocalDateTime endDate = LocalDate.parse(endDateInformation, formatter).atStartOfDay();
         LocalDateTime today = DateTimes.now();
         return (today.isAfter(startDate) && today.isBefore(endDate));
     }
