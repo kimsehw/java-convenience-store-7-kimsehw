@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import store.constant.ConstantBox;
@@ -34,7 +35,7 @@ public class StockManager {
     }
 
     private Map<String, Products> organizeStock(List<String> productsData) {
-        Map<String, Products> stock = new HashMap<>();
+        Map<String, Products> stock = new LinkedHashMap<>();
         productsData.forEach(productData -> putStock(stock, productData));
         return Collections.unmodifiableMap(stock);
     }
