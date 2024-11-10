@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import store.constant.ConstantBox;
 import store.model.domain.Promotion;
 import store.model.domain.PurchaseResponseCode;
 
@@ -20,10 +21,10 @@ class ProductsTest {
     private static final int TEST_TOTAL_QUANTITY = 10;
     private static final String TEST_NAME = "콜라";
     private static final int TEST_PRICE = 1000;
+    private static final Product normalProduct = new NormalProduct(TEST_NAME, TEST_PRICE, TEST_NORMAL_QUANTITY);
 
     private Products products;
     private Product promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_PROMOTION_QUANTITY, null);
-    private Product normalProduct = new NormalProduct(TEST_NAME, TEST_PRICE, TEST_NORMAL_QUANTITY);
 
     @DisplayName("상품 추가 테스트(두 종류)")
     @Test
@@ -96,6 +97,38 @@ class ProductsTest {
                 Arguments.of(2, PurchaseResponseCode.PURCHASE_SUCCESS, 2),
                 Arguments.of(3, PurchaseResponseCode.PURCHASE_SUCCESS, 3),
                 Arguments.of(11, PurchaseResponseCode.OUT_OF_STOCK, 11)
+        );
+    }
+
+    @DisplayName("재고 검사 기능 테스트(일반 상품만 있는 경우)")
+    @ParameterizedTest
+    @MethodSource("generateDisplayCase")
+    void getProductsDataTest(boolean onlyPromotion, Product promotionProduct, String expectedPromotionProductData,
+                             String expectedNormalProductData) {
+        products = new Products(normalProduct);
+        if (promotionProduct != null) {
+            products.add(promotionProduct);
+        }
+        if (onlyPromotion) {
+            products = new Products(promotionProduct);
+        }
+        assertThat(products.getProductsData())
+                .extracting("promotionProductData", "normalProductData")
+                .containsExactly(expectedPromotionProductData, expectedNormalProductData);
+    }
+
+    static Stream<Arguments> generateDisplayCase() {
+        Promotion promotion = new Promotion(List.of("탄산2+1", "2", "1", "null", "null"));
+        Product promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_PROMOTION_QUANTITY,
+                promotion);
+        String expectedPromotionProductData = promotionProduct.getProductData();
+        String expectedNormalProductData = normalProduct.getProductData();
+        return Stream.of(
+                Arguments.of(false, promotionProduct, expectedPromotionProductData, expectedNormalProductData),
+                Arguments.of(false, null, null, expectedNormalProductData),
+                Arguments.of(true, promotionProduct, expectedPromotionProductData,
+                        String.join(ConstantBox.SEPARATOR, TEST_NAME, Integer.toString(TEST_PRICE),
+                                ConstantBox.NO_QUANTITY))
         );
     }
 }
