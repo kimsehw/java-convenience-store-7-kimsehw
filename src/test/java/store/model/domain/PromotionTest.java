@@ -27,18 +27,18 @@ class PromotionTest {
 
     @DisplayName("프로모션 적용 구매 응답 테스트.")
     @ParameterizedTest
-    @CsvSource({"2,1,10,7,PROMOTION_PARTIAL_AVAILABLE,2,4",
+    @CsvSource({"2,1,10,7,PROMOTION_PARTIAL_UNAVAILABLE,2,4",
             "2,1,5,7,FREE_PRODUCT_REMIND,1,2",
-            "2,1,4,7,PROMOTION_PARTIAL_AVAILABLE,1,1",
+            "2,1,4,7,PROMOTION_PARTIAL_UNAVAILABLE,1,1",
             "2,1,6,7,PURCHASE_SUCCESS,2,0",
-            "2,1,2,2,PROMOTION_PARTIAL_AVAILABLE,0,2",
-            "1,1,1,1,PROMOTION_PARTIAL_AVAILABLE,0,1",
-            "1,1,2,1,PROMOTION_PARTIAL_AVAILABLE,0,2",
-            "1,1,3,3,PROMOTION_PARTIAL_AVAILABLE,1,1",
+            "2,1,2,2,PROMOTION_PARTIAL_UNAVAILABLE,0,2",
+            "1,1,1,1,PROMOTION_PARTIAL_UNAVAILABLE,0,1",
+            "1,1,2,1,PROMOTION_PARTIAL_UNAVAILABLE,0,2",
+            "1,1,3,3,PROMOTION_PARTIAL_UNAVAILABLE,1,1",
             "1,1,3,4,FREE_PRODUCT_REMIND,1,1",
             "1,1,1,4,FREE_PRODUCT_REMIND,0,1",
             "1,1,2,4,PURCHASE_SUCCESS,1,0",
-            "3,1,5,3,PROMOTION_PARTIAL_AVAILABLE,0,5",
+            "3,1,5,3,PROMOTION_PARTIAL_UNAVAILABLE,0,5",
             "3,1,3,4,FREE_PRODUCT_REMIND,0,3"})
     void discountTest(int buy, int get, int requestQuantity, int stockQuantity, PurchaseResponseCode expectedCode,
                       int expectedPromotionCount, int expectedRestCount) {

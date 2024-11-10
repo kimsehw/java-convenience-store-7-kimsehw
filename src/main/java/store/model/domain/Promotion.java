@@ -50,7 +50,7 @@ public class Promotion {
     }
 
     private PurchaseResponse responsePartialAvailable(int promotionCount, int restCount) {
-        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, restCount);
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, promotionCount, restCount);
     }
 
     private boolean isInsufficientStock(int requestQuantity, int stockQuantity) {
@@ -60,7 +60,7 @@ public class Promotion {
     private PurchaseResponse responseInsufficientStock(int requestQuantity, int stockQuantity) {
         int promotionCount = stockQuantity / (buy + get);
         int restCount = stockQuantity % (buy + get) + (requestQuantity - stockQuantity);
-        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, restCount);
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, promotionCount, restCount);
     }
 
     private boolean isSuccessPromotionPurchase(int restCount) {
@@ -88,7 +88,7 @@ public class Promotion {
     }
 
     private PurchaseResponse responseInsufficientFreeStock(int promotionCount, int restCount) {
-        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, promotionCount, restCount);
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, promotionCount, restCount);
     }
 
     private PurchaseResponse responseFreeRemind(int promotionCount, int restCount) {

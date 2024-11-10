@@ -28,7 +28,9 @@ class NormalProductTest {
     @ParameterizedTest
     @CsvSource({"6,PURCHASE_SUCCESS", "7,OUT_OF_STOCK"})
     void isPurchasableTest(int requestQuantity, PurchaseResponseCode expected) {
-        assertThat(normalProduct.isPurchasable(requestQuantity)).isEqualTo(expected);
+        assertThat(normalProduct.isPurchasable(requestQuantity))
+                .extracting("purchaseResponseCode")
+                .isEqualTo(expected);
     }
 
     @DisplayName("재고 차감 테스트")

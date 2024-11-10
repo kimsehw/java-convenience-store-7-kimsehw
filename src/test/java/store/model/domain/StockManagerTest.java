@@ -48,7 +48,7 @@ class StockManagerTest {
 
     @DisplayName("구매 상품 구매 응답 반환 기능 테스트")
     @ParameterizedTest
-    @CsvSource("콜라,12,PROMOTION_PARTIAL_AVAILABLE,3,3")
+    @CsvSource("콜라,12,PROMOTION_PARTIAL_UNAVAILABLE,3,3")
     void getPurchaseResponseFromTest(String requestProductName, int requestQuantity, PurchaseResponseCode expectedCode,
                                      int expectedPromotionCount, int expectedRestCount) {
         assertThat(stockManager.getPurchaseResponseFrom(requestProductName, requestQuantity))

@@ -28,7 +28,7 @@ public class PromotionProduct implements Product {
         if (promotion.isOnPromotion()) {
             return promotion.discount(requestQuantity, quantity);
         }
-        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE, 0, requestQuantity);
+        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 0, requestQuantity);
     }
 
     @Override

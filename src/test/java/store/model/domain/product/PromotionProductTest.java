@@ -41,7 +41,7 @@ class PromotionProductTest {
     static Stream<Arguments> generatePurchaseCase() {
         return Stream.of(
                 Arguments.of("2024-01-01", "2024-12-31", 3, PurchaseResponseCode.PURCHASE_SUCCESS),
-                Arguments.of("2023-01-01", "2023-12-31", 3, PurchaseResponseCode.PROMOTION_PARTIAL_AVAILABLE),
+                Arguments.of("2023-01-01", "2023-12-31", 3, PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE),
                 Arguments.of("2024-01-01", "2024-12-31", 2, PurchaseResponseCode.FREE_PRODUCT_REMIND)
         );
     }
