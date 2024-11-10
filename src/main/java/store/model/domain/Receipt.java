@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Receipt {
 
-    private final List<String> name = new ArrayList<>();
-    private final List<Integer> quantity = new ArrayList<>();
-    private final List<Integer> price = new ArrayList<>();
-    private final List<Integer> promotionCount = new ArrayList<>();
+    private final List<String> names = new ArrayList<>();
+    private final List<Integer> quantities = new ArrayList<>();
+    private final List<Integer> prices = new ArrayList<>();
+    private final List<Integer> promotionCounts = new ArrayList<>();
 
     public void addSalesData(SalesData salesData) {
-        name.add(salesData.getName());
-        quantity.add(salesData.getQuantity());
-        price.add(salesData.getPrice());
-        promotionCount.add(salesData.getPromotionCount());
+        names.add(salesData.getName());
+        quantities.add(salesData.getQuantity());
+        prices.add(salesData.getPrice());
+        promotionCounts.add(salesData.getPromotionCount());
     }
 }

@@ -5,14 +5,17 @@ import java.util.List;
 import store.constant.ConstantBox;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
+import store.model.domain.Receipt;
+import store.model.domain.SalesData;
 
 public class Products {
 
     private static final int PROMOTION_INDEX = 0;
     public static final int NORMAL_INDEX = 1;
     public static final int NO_QUANTITY = 0;
+    public static final int NO_COUNT = 0;
 
-    private int totalQuantity = 0;
+    private int totalQuantity = NO_QUANTITY;
     private final List<Product> products = Arrays.asList(null, null);
 
     public Products(Product product) {
@@ -35,13 +38,13 @@ public class Products {
 
     public PurchaseResponse checkQuantity(int requestQuantity) {
         if (totalQuantity < requestQuantity) {
-            return new PurchaseResponse(PurchaseResponseCode.OUT_OF_STOCK, 0, requestQuantity);
+            return new PurchaseResponse(PurchaseResponseCode.OUT_OF_STOCK, NO_COUNT, requestQuantity);
         }
         if (isTherePromotionProduct()) {
             Product product = products.get(PROMOTION_INDEX);
             return product.isPurchasable(requestQuantity);
         }
-        return new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, 0, requestQuantity);
+        return new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, NO_COUNT, requestQuantity);
     }
 
     private boolean isTherePromotionProduct() {
@@ -86,5 +89,69 @@ public class Products {
         Product product = products.get(NORMAL_INDEX);
         String normalProductData = product.getProductData();
         return new ProductsDisplayData(null, normalProductData);
+    }
+
+    public void updateReceipt(Receipt receipt, String CustomerRespond, PurchaseResponse purchaseResponse) {
+        PurchaseResponseCode purchaseResponseCode = purchaseResponse.getPurchaseResponseCode();
+        int promotionCount = purchaseResponse.getPromotionCount();
+        int restCount = purchaseResponse.getRestCount();
+        updateByEachCase(receipt, CustomerRespond, purchaseResponseCode, restCount, promotionCount);
+    }
+
+    private void updateByEachCase(Receipt receipt, String CustomerRespond,
+                                  PurchaseResponseCode purchaseResponseCode, int restCount, int promotionCount) {
+        if (purchaseResponseCode.equals(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE)) {
+            updateInPartialUnavailableCase(receipt, CustomerRespond, restCount, promotionCount);
+        }
+        if (purchaseResponseCode.equals(PurchaseResponseCode.FREE_PRODUCT_REMIND)) {
+            updateInFreeProductRemindCase(receipt, CustomerRespond, restCount, promotionCount);
+        }
+        if (purchaseResponseCode.equals(PurchaseResponseCode.PURCHASE_SUCCESS)) {
+            updateInSuccessCase(receipt, promotionCount, restCount);
+        }
+    }
+
+    private void updateInSuccessCase(Receipt receipt, int promotionCount, int restCount) {
+        SalesData salesData;
+        if (promotionCount != NO_COUNT) {
+            salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
+            receipt.addSalesData(salesData);
+            return;
+        }
+        salesData = getSalesDataFrom(NORMAL_INDEX, restCount, promotionCount);
+        receipt.addSalesData(salesData);
+    }
+
+    private void updateInFreeProductRemindCase(Receipt receipt, String CustomerRespond, int restCount,
+                                               int promotionCount) {
+        if (CustomerRespond.equals(ConstantBox.CUSTOMER_RESPOND_Y)) {
+            restCount = NO_COUNT;
+            promotionCount++;
+        }
+        SalesData salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
+        Product product;
+        product = products.get(NORMAL_INDEX);
+        receipt.addSalesData(salesData);
+    }
+
+    private void updateInPartialUnavailableCase(Receipt receipt, String CustomerRespond, int restCount,
+                                                int promotionCount) {
+        if (CustomerRespond.equals(ConstantBox.CUSTOMER_RESPOND_N)) {
+            restCount = NO_COUNT;
+        }
+        SalesData salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
+        reduceRestCountNormalProduct(salesData);
+        receipt.addSalesData(salesData);
+    }
+
+    private void reduceRestCountNormalProduct(SalesData salesData) {
+        Product product = products.get(NORMAL_INDEX);
+        int restCount = salesData.getRestCount();
+        product.reduce(restCount);
+    }
+
+    private SalesData getSalesDataFrom(int index, int restCount, int promotionCount) {
+        Product product = products.get(index);
+        return product.getSalesData(promotionCount, restCount);
     }
 }
