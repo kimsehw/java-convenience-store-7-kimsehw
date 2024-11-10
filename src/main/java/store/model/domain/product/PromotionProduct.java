@@ -4,6 +4,7 @@ import store.constant.ConstantBox;
 import store.model.domain.Promotion;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
+import store.model.domain.SalesData;
 
 public class PromotionProduct implements Product {
 
@@ -32,9 +33,22 @@ public class PromotionProduct implements Product {
         return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 0, requestQuantity);
     }
 
-    @Override
     public void reduce(int requestQuantity) {
         quantity -= requestQuantity;
+    }
+
+    @Override
+    public SalesData getSalesData(int promotionCount, int restCount) {
+        int promotionQuantity = promotionCount * promotion.getAppliedQuantity();
+        int reduceQuantity = promotionQuantity + restCount;
+        if (quantity < reduceQuantity) {
+            restCount = reduceQuantity - quantity;
+            quantity = Integer.parseInt(ConstantBox.NO_QUANTITY);
+        }
+        if (quantity >= reduceQuantity) {
+            reduce(reduceQuantity);
+        }
+        return new SalesData(name, reduceQuantity, price, promotionCount, restCount);
     }
 
     @Override

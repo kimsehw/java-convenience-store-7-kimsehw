@@ -99,4 +99,8 @@ public class Promotion {
     public String getPromotionName() {
         return promotionInformation.getFirst();
     }
+
+    public int getAppliedQuantity() {
+        return buy + get;
+    }
 }

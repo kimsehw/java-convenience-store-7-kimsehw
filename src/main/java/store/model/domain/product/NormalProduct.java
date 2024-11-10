@@ -3,6 +3,7 @@ package store.model.domain.product;
 import store.constant.ConstantBox;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
+import store.model.domain.SalesData;
 
 public class NormalProduct implements Product {
 
@@ -32,6 +33,12 @@ public class NormalProduct implements Product {
     @Override
     public void reduce(int requestQuantity) {
         quantity -= requestQuantity;
+    }
+
+    @Override
+    public SalesData getSalesData(int promotionCount, int restCount) {
+        reduce(restCount);
+        return new SalesData(name, restCount, price, promotionCount, restCount);
     }
 
     @Override

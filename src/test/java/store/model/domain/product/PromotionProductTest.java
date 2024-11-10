@@ -57,4 +57,24 @@ class PromotionProductTest {
         promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_QUANTITY, promotion);
         assertThat(promotionProduct.getProductData()).isEqualTo(data);
     }
+
+    @DisplayName("판매 데이터 생성 테스트")
+    @ParameterizedTest
+    @MethodSource("generateSalesDataCase")
+    void getSalesDataTest(int promotionCount, int restCount, int expectedQuantity, int expectedRestCount,
+                          int expectedSalesQuantity) {
+        Promotion promotion = new Promotion(List.of("탄산2+1", "2", "1", "null", "null"));
+        promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_QUANTITY, promotion);
+        assertThat(promotionProduct.getSalesData(promotionCount, restCount))
+                .extracting("name", "quantity", "price", "promotionCount", "restCount")
+                .containsExactly(TEST_NAME, expectedSalesQuantity, TEST_PRICE, promotionCount, expectedRestCount);
+        assertThat(promotionProduct.getQuantity()).isEqualTo(expectedQuantity);
+    }
+
+    static Stream<Arguments> generateSalesDataCase() {
+        return Stream.of(
+                Arguments.of(2, 0, 1, 0, 6),
+                Arguments.of(2, 3, 0, 2, 9)
+        );
+    }
 }
