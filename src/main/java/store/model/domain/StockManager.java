@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import store.exception.ExceptionType;
+import store.exception.InputException;
 import store.model.domain.product.Product;
 import store.model.domain.product.ProductFactory;
 import store.model.domain.product.Products;
@@ -77,13 +79,23 @@ public class StockManager {
 
     public PurchaseResponse getPurchaseResponseFrom(String requestProductName, int requestQuantity) {
         Products products = stock.get(requestProductName);
-        if (products == null) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
-        }
+        checkNotExistProductException(products);
         PurchaseResponse purchaseResponse = products.checkQuantity(requestQuantity);
-        if (purchaseResponse.getPurchaseResponseCode().equals(PurchaseResponseCode.OUT_OF_STOCK)) {
-            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
-        }
+        checkOverStockAmountException(purchaseResponse);
         return purchaseResponse;
+    }
+
+    private void checkNotExistProductException(Products products) {
+        boolean isNotExistProduct = (products == null);
+        if (isNotExistProduct) {
+            throw new InputException(ExceptionType.NOT_EXIST_PRODUCT);
+        }
+    }
+
+    private static void checkOverStockAmountException(PurchaseResponse purchaseResponse) {
+        boolean isOverStock = purchaseResponse.getPurchaseResponseCode().equals(PurchaseResponseCode.OUT_OF_STOCK);
+        if (isOverStock) {
+            throw new InputException(ExceptionType.OVER_STOCK_AMOUNT);
+        }
     }
 }
