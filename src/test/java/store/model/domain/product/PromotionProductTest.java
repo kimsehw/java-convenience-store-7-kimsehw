@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import store.model.domain.Promotion;
 import store.model.domain.PurchaseResponseCode;
 
@@ -45,5 +46,15 @@ class PromotionProductTest {
                 Arguments.of("2023-01-01", "2023-12-31", 3, PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE),
                 Arguments.of("2024-01-01", "2024-12-31", 2, PurchaseResponseCode.FREE_PRODUCT_REMIND)
         );
+    }
+
+    @DisplayName("상품 데이터 생성 테스트")
+    @ParameterizedTest
+    @ValueSource(strings = "콜라,1000,7,탄산2+1")
+    void getProductDataTest(String data) {
+        List<String> information = List.of(data.split(","));
+        Promotion promotion = new Promotion(List.of(information.getLast(), "2", "1", "null", "null"));
+        promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_QUANTITY, promotion);
+        assertThat(promotionProduct.getProductData()).isEqualTo(data);
     }
 }

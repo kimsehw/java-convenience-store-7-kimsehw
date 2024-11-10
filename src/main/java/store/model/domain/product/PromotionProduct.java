@@ -37,8 +37,13 @@ public class PromotionProduct implements Product {
     }
 
     @Override
+    public String getProductData() {
+        String promotionName = promotion.getPromotionName();
+        return String.join(",", name, Integer.toString(price), Integer.toString(quantity), promotionName);
+    }
+
+    @Override
     public int getQuantity() {
         return quantity;
     }
-
 }

@@ -95,4 +95,8 @@ public class Promotion {
     private PurchaseResponse responseFreeRemind(int promotionCount, int restCount) {
         return new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, promotionCount, restCount);
     }
+
+    public String getPromotionName() {
+        return promotionInformation.getFirst();
+    }
 }

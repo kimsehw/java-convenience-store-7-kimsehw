@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import store.model.domain.product.NormalProduct;
 
 
@@ -40,5 +41,13 @@ class NormalProductTest {
         normalProduct.reduce(requestQuantity);
         int expected = TEST_QUANTITY - requestQuantity;
         assertThat(normalProduct.getQuantity()).isEqualTo(expected);
+    }
+
+
+    @DisplayName("상품 데이터 생성 테스트")
+    @ParameterizedTest
+    @ValueSource(strings = "콜라,1000,6")
+    void getProductDataTest(String data) {
+        assertThat(normalProduct.getProductData()).isEqualTo(data);
     }
 }

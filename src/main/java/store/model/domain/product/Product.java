@@ -10,4 +10,6 @@ public interface Product {
     PurchaseResponse isPurchasable(int requestQuantity);
 
     void reduce(int requestQuantity);
+
+    String getProductData();
 }

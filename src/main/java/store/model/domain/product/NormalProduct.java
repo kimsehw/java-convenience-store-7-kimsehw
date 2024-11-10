@@ -34,6 +34,11 @@ public class NormalProduct implements Product {
     }
 
     @Override
+    public String getProductData() {
+        return String.join(",", name, Integer.toString(price), Integer.toString(quantity));
+    }
+
+    @Override
     public int getQuantity() {
         return quantity;
     }
