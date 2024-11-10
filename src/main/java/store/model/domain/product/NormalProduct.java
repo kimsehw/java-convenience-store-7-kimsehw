@@ -1,5 +1,6 @@
 package store.model.domain.product;
 
+import store.constant.ConstantBox;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
 
@@ -35,7 +36,7 @@ public class NormalProduct implements Product {
 
     @Override
     public String getProductData() {
-        return String.join(",", name, Integer.toString(price), Integer.toString(quantity));
+        return String.join(ConstantBox.SEPARATOR, name, Integer.toString(price), Integer.toString(quantity));
     }
 
     @Override

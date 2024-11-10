@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import store.constant.ConstantBox;
 import store.exception.ExceptionType;
 import store.exception.InputException;
 import store.model.domain.product.Product;
@@ -17,7 +18,6 @@ public class StockManager {
 
     public static final String PRODUCTS_FILE_PATH = "src/main/resources/products.md";
     public static final String PROMOTIONS_FILE_PATH = "src/main/resources/promotions.md";
-    public static final String SEPARATOR = ",";
 
     private Map<String, Products> stock;
     private Map<String, Promotion> promotions;
@@ -40,7 +40,7 @@ public class StockManager {
     }
 
     private void putStock(Map<String, Products> stock, String productData) {
-        List<String> productInformation = List.of(productData.split(SEPARATOR));
+        List<String> productInformation = List.of(productData.split(ConstantBox.SEPARATOR));
         Product product = ProductFactory.createProductFrom(productInformation, promotions);
         String name = productInformation.getFirst();
         addProduct(stock, name, product);
@@ -68,7 +68,7 @@ public class StockManager {
     }
 
     private void putPromotion(Map<String, Promotion> promotions, String promotionData) {
-        List<String> promotionInformation = List.of(promotionData.split(SEPARATOR));
+        List<String> promotionInformation = List.of(promotionData.split(ConstantBox.SEPARATOR));
         String name = promotionInformation.getFirst();
         promotions.put(name, new Promotion(promotionInformation));
     }

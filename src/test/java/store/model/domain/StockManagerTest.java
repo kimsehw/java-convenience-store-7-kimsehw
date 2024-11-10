@@ -15,11 +15,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import store.constant.ConstantBox;
 import store.exception.ExceptionType;
 
 class StockManagerTest {
 
-    public static final int HEADER_LINE_COUNT = 1;
+    private static final int HEADER_LINE_COUNT = 1;
 
     private StockManager stockManager;
 
@@ -33,7 +34,7 @@ class StockManagerTest {
     void readProductsTest() throws IOException {
         List<String> productsData = Files.readAllLines(Path.of(StockManager.PRODUCTS_FILE_PATH));
         Set<String> names = new HashSet<>();
-        productsData.forEach(productData -> names.add(productData.split(StockManager.SEPARATOR)[0]));
+        productsData.forEach(productData -> names.add(productData.split(ConstantBox.SEPARATOR)[0]));
         assertThat(stockManager).extracting("stock").asInstanceOf(MAP)
                 .hasSize(names.size() - HEADER_LINE_COUNT);
     }

@@ -1,5 +1,6 @@
 package store.model.domain.product;
 
+import store.constant.ConstantBox;
 import store.model.domain.Promotion;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
@@ -39,7 +40,8 @@ public class PromotionProduct implements Product {
     @Override
     public String getProductData() {
         String promotionName = promotion.getPromotionName();
-        return String.join(",", name, Integer.toString(price), Integer.toString(quantity), promotionName);
+        return String.join(ConstantBox.SEPARATOR, name, Integer.toString(price), Integer.toString(quantity),
+                promotionName);
     }
 
     @Override
