@@ -1,6 +1,8 @@
 package store.model.domain;
 
 public class PurchaseResponse {
+
+    private String name;
     private PurchaseResponseCode purchaseResponseCode;
     private int promotionCount;
     private int restCount;
@@ -9,6 +11,14 @@ public class PurchaseResponse {
         this.purchaseResponseCode = purchaseResponseCode;
         this.promotionCount = promotionCount;
         this.restCount = restCount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public PurchaseResponseCode getPurchaseResponseCode() {

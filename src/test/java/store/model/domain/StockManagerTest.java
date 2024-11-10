@@ -52,8 +52,8 @@ class StockManagerTest {
     void getPurchaseResponseFromTest(String requestProductName, int requestQuantity, PurchaseResponseCode expectedCode,
                                      int expectedPromotionCount, int expectedRestCount) {
         assertThat(stockManager.getPurchaseResponseFrom(requestProductName, requestQuantity))
-                .extracting("purchaseResponseCode", "promotionCount", "restCount")
-                .containsExactly(expectedCode, expectedPromotionCount, expectedRestCount);
+                .extracting("name", "purchaseResponseCode", "promotionCount", "restCount")
+                .containsExactly(requestProductName, expectedCode, expectedPromotionCount, expectedRestCount);
     }
 
     @DisplayName("재고 수량 초과 예외 테스트")

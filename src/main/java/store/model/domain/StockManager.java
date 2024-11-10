@@ -82,6 +82,7 @@ public class StockManager {
         checkNotExistProductException(products);
         PurchaseResponse purchaseResponse = products.checkQuantity(requestQuantity);
         checkOverStockAmountException(purchaseResponse);
+        purchaseResponse.setName(requestProductName);
         return purchaseResponse;
     }
 
