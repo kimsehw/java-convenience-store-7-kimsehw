@@ -4,7 +4,7 @@ import java.util.List;
 import store.constant.ConstantBox;
 import store.model.domain.product.ProductsDisplayData;
 
-public class ProductsDisplayView {
+public class ProductsDisplayView implements OutputView {
 
     private static final String PROMOTION_PRODUCT_DISPLAY_FORMAT = "- %s %,d원 %,d개 %s";
     private static final String NOT_EXIST_PROMOTION_PRODUCT_DISPLAY_FORMAT = "- %s %,d원 재고 없음 %s";
@@ -13,7 +13,14 @@ public class ProductsDisplayView {
     private static final String WELCOME_MESSAGE = "안녕하세요. W편의점입니다.";
     private static final String CURRENT_PRODUCTS_MESSAGE = "현재 보유하고 있는 상품입니다.";
 
-    public void display(List<ProductsDisplayData> displayDatas) {
+    private List<ProductsDisplayData> displayDatas;
+
+    public ProductsDisplayView(List<ProductsDisplayData> displayDatas) {
+        this.displayDatas = displayDatas;
+    }
+
+    @Override
+    public void display() {
         displayWelcomeMessage();
         for (ProductsDisplayData displayData : displayDatas) {
             displayPromotionProduct(displayData);
