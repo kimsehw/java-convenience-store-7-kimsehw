@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import store.constant.ConstantBox;
+import store.model.domain.input.CustomerRespond;
 
 class ReceiptTest {
 
@@ -21,7 +22,7 @@ class ReceiptTest {
     void getReceiptInformation(Map<String, List> expectedSalesDatas, List<Integer> expectedAmountInformation) {
         receipt.addSalesData(new SalesData("콜라", 3, 1000, 1, 0));
         receipt.addSalesData(new SalesData("에너지바", 5, 2000, 0, 0));
-        assertThat(receipt.getReceiptInformation(ConstantBox.CUSTOMER_RESPOND_Y))
+        assertThat(receipt.getReceiptInformation(new CustomerRespond(ConstantBox.CUSTOMER_RESPOND_Y)))
                 .extracting("salesDatas", "amountInformation")
                 .containsExactly(expectedSalesDatas, expectedAmountInformation);
     }

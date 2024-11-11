@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import store.constant.ConstantBox;
+import store.model.domain.input.CustomerRespond;
 
 public class Receipt {
 
@@ -24,7 +24,7 @@ public class Receipt {
         promotionCounts.add(salesData.getPromotionCount());
     }
 
-    public ReceiptInformation getReceiptInformation(String membershipRespond) {
+    public ReceiptInformation getReceiptInformation(CustomerRespond membershipRespond) {
         int totalPurchased = ZERO;
         int promotionDiscount = ZERO;
         int totalQuantity = ZERO;
@@ -34,7 +34,8 @@ public class Receipt {
         return new ReceiptInformation(salesDatas, amountInformation);
     }
 
-    private List<Integer> generateAmountInformation(String membershipRespond, int totalPurchased, int promotionDiscount,
+    private List<Integer> generateAmountInformation(CustomerRespond membershipRespond, int totalPurchased,
+                                                    int promotionDiscount,
                                                     int totalQuantity) {
         for (int productKindIndex = ZERO; productKindIndex < names.size(); productKindIndex++) {
             totalPurchased += quantities.get(productKindIndex) * prices.get(productKindIndex);
@@ -46,9 +47,9 @@ public class Receipt {
         return List.of(totalQuantity, totalPurchased, promotionDiscount, memberShipDiscount, pay);
     }
 
-    private int getMembershipDiscount(String membershipRespond, int totalPurchasedAmount,
+    private int getMembershipDiscount(CustomerRespond membershipRespond, int totalPurchasedAmount,
                                       int promotionDiscountAmount) {
-        if (membershipRespond.equals(ConstantBox.CUSTOMER_RESPOND_N)) {
+        if (!membershipRespond.doesCustomerAgree()) {
             return ZERO;
         }
         return calculateMembershipDiscount(totalPurchasedAmount, promotionDiscountAmount);

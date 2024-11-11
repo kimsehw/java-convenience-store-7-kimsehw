@@ -9,6 +9,7 @@ public class CustomerRespond {
     private String customerRespond;
 
     public CustomerRespond(String inputCustomerRespond) {
+        validate(inputCustomerRespond);
         this.customerRespond = inputCustomerRespond;
     }
 
@@ -25,8 +26,7 @@ public class CustomerRespond {
     }
 
     private void validateRespond(String inputCustomerRespond) {
-        boolean isValidRespondInput = (inputCustomerRespond.equals(ConstantBox.CUSTOMER_RESPOND_Y)
-                || inputCustomerRespond.equals(ConstantBox.CUSTOMER_RESPOND_N));
+        boolean isValidRespondInput = inputCustomerRespond.matches("^[YN]$");
         if (!isValidRespondInput) {
             throw new InputException(ExceptionType.INVALID_RESPOND_INPUT);
         }
