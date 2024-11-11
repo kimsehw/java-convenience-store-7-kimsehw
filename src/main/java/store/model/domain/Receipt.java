@@ -25,26 +25,29 @@ public class Receipt {
     }
 
     public ReceiptInformation getReceiptInformation(String membershipRespond) {
-        List<Integer> amountInformation = generateAmountInformation(membershipRespond);
+        int totalPurchased = ZERO;
+        int promotionDiscount = ZERO;
+        int totalQuantity = ZERO;
+        List<Integer> amountInformation = generateAmountInformation(membershipRespond, totalPurchased,
+                promotionDiscount, totalQuantity);
         Map<String, List> salesDatas = generateSalesDatas();
         return new ReceiptInformation(salesDatas, amountInformation);
     }
 
-    private List<Integer> generateAmountInformation(String membershipRespond) {
-        int totalPurchasedAmount = ZERO;
-        int promotionDiscountAmount = ZERO;
+    private List<Integer> generateAmountInformation(String membershipRespond, int totalPurchased, int promotionDiscount,
+                                                    int totalQuantity) {
         for (int productKindIndex = ZERO; productKindIndex < names.size(); productKindIndex++) {
-            totalPurchasedAmount += quantities.get(productKindIndex) * prices.get(productKindIndex);
-            promotionDiscountAmount += promotionCounts.get(productKindIndex) * prices.get(productKindIndex);
+            totalPurchased += quantities.get(productKindIndex) * prices.get(productKindIndex);
+            promotionDiscount += promotionCounts.get(productKindIndex) * prices.get(productKindIndex);
+            totalQuantity += quantities.get(productKindIndex);
         }
-        int memberShipDiscountAmount = getMembershipDiscountAmount(membershipRespond, totalPurchasedAmount,
-                promotionDiscountAmount);
-        int payAmount = totalPurchasedAmount - promotionDiscountAmount - memberShipDiscountAmount;
-        return List.of(totalPurchasedAmount, promotionDiscountAmount, memberShipDiscountAmount, payAmount);
+        int memberShipDiscount = getMembershipDiscount(membershipRespond, totalPurchased, promotionDiscount);
+        int pay = totalPurchased - promotionDiscount - memberShipDiscount;
+        return List.of(totalQuantity, totalPurchased, promotionDiscount, memberShipDiscount, pay);
     }
 
-    private int getMembershipDiscountAmount(String membershipRespond, int totalPurchasedAmount,
-                                            int promotionDiscountAmount) {
+    private int getMembershipDiscount(String membershipRespond, int totalPurchasedAmount,
+                                      int promotionDiscountAmount) {
         if (membershipRespond.equals(ConstantBox.CUSTOMER_RESPOND_N)) {
             return ZERO;
         }

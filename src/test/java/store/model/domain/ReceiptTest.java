@@ -34,7 +34,7 @@ class ReceiptTest {
                 "promotionCounts", List.of(1, 0)
         );
         return Stream.of(
-                Arguments.of(expectedSalesDatas, List.of(13000, 1000, 3000, 9000))
+                Arguments.of(expectedSalesDatas, List.of(8, 13000, 1000, 3000, 9000))
         );
     }
 }
