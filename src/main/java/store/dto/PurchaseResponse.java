@@ -1,17 +1,16 @@
-package store.model.domain;
+package store.dto;
 
-public class SalesData {
+import store.model.domain.PurchaseResponseCode;
+
+public class PurchaseResponse {
 
     private String name;
-    private int quantity;
-    private int price;
+    private PurchaseResponseCode purchaseResponseCode;
     private int promotionCount;
     private int restCount;
 
-    public SalesData(String name, int quantity, int price, int promotionCount, int restCount) {
-        this.name = name;
-        this.quantity = quantity;
-        this.price = price;
+    public PurchaseResponse(PurchaseResponseCode purchaseResponseCode, int promotionCount, int restCount) {
+        this.purchaseResponseCode = purchaseResponseCode;
         this.promotionCount = promotionCount;
         this.restCount = restCount;
     }
@@ -24,20 +23,12 @@ public class SalesData {
         this.name = name;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public PurchaseResponseCode getPurchaseResponseCode() {
+        return purchaseResponseCode;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
+    public void setPurchaseResponseCode(PurchaseResponseCode purchaseResponseCode) {
+        this.purchaseResponseCode = purchaseResponseCode;
     }
 
     public int getPromotionCount() {

@@ -12,8 +12,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import store.constant.ConstantBox;
+import store.dto.PurchaseResponse;
 import store.model.domain.Promotion;
-import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
 import store.model.domain.input.CustomerRespond;
 

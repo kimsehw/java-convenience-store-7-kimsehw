@@ -2,7 +2,7 @@ package store.view.outputview;
 
 import java.util.List;
 import java.util.Map;
-import store.model.domain.ReceiptInformation;
+import store.dto.ReceiptInformation;
 
 public class ReceiptView implements OutputView {
 

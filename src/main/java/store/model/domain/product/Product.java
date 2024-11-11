@@ -1,7 +1,7 @@
 package store.model.domain.product;
 
-import store.model.domain.PurchaseResponse;
-import store.model.domain.SalesData;
+import store.dto.PurchaseResponse;
+import store.dto.SalesData;
 
 public interface Product {
     boolean isProductOf(String productName);

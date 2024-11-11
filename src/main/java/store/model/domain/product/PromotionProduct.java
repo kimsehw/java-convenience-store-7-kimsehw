@@ -1,10 +1,10 @@
 package store.model.domain.product;
 
 import store.constant.ConstantBox;
+import store.dto.PurchaseResponse;
+import store.dto.SalesData;
 import store.model.domain.Promotion;
-import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
-import store.model.domain.SalesData;
 
 public class PromotionProduct implements Product {
 

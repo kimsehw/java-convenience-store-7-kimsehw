@@ -1,7 +1,7 @@
 package store.view.inputview;
 
 import camp.nextstep.edu.missionutils.Console;
-import store.model.domain.PurchaseResponse;
+import store.dto.PurchaseResponse;
 
 public class InputView {
 

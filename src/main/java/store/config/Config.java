@@ -1,4 +1,4 @@
-package store;
+package store.config;
 
 import java.io.IOException;
 import store.controller.StoreController;

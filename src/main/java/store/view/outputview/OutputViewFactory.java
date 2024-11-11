@@ -1,7 +1,7 @@
 package store.view.outputview;
 
 import java.util.List;
-import store.model.domain.ReceiptInformation;
+import store.dto.ReceiptInformation;
 import store.model.domain.product.ProductsDisplayData;
 
 public class OutputViewFactory {

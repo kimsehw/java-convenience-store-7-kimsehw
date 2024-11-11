@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import store.dto.ReceiptInformation;
+import store.dto.SalesData;
 import store.model.domain.input.CustomerRespond;
 
 public class Receipt {

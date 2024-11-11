@@ -1,9 +1,9 @@
 package store.model.domain.product;
 
 import store.constant.ConstantBox;
-import store.model.domain.PurchaseResponse;
+import store.dto.PurchaseResponse;
+import store.dto.SalesData;
 import store.model.domain.PurchaseResponseCode;
-import store.model.domain.SalesData;
 
 public class NormalProduct implements Product {
 

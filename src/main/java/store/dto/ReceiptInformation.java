@@ -1,4 +1,4 @@
-package store.model.domain;
+package store.dto;
 
 import java.util.List;
 import java.util.Map;

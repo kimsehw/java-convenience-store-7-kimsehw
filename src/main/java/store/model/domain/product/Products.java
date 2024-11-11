@@ -3,9 +3,9 @@ package store.model.domain.product;
 import java.util.Arrays;
 import java.util.List;
 import store.constant.ConstantBox;
-import store.model.domain.PurchaseResponse;
+import store.dto.PurchaseResponse;
+import store.dto.SalesData;
 import store.model.domain.PurchaseResponseCode;
-import store.model.domain.SalesData;
 import store.model.domain.input.CustomerRespond;
 
 public class Products {

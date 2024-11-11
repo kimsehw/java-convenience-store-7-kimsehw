@@ -1,6 +1,7 @@
 package store;
 
 import java.io.IOException;
+import store.config.Config;
 import store.controller.StoreController;
 
 public class Application {
