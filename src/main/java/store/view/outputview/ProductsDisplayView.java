@@ -21,6 +21,7 @@ public class ProductsDisplayView implements OutputView {
 
     @Override
     public void display() {
+        System.out.println();
         displayWelcomeMessage();
         for (ProductsDisplayData displayData : displayDatas) {
             displayPromotionProduct(displayData);

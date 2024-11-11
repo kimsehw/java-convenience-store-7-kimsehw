@@ -6,11 +6,13 @@ import store.model.domain.PurchaseResponse;
 public class InputView {
 
     public void showRequestMessageOf(InputViewType inputViewType) {
+        System.out.println();
         System.out.println(inputViewType.getRequestMessage());
     }
 
     public void showRequestMessageOf(InputViewType inputViewType, PurchaseResponse purchaseResponse) {
         String requestMessage = messageFormat(inputViewType, purchaseResponse);
+        System.out.println();
         System.out.println(requestMessage);
     }
 

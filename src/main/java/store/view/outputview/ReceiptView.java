@@ -31,6 +31,7 @@ public class ReceiptView implements OutputView {
 
     @Override
     public void display() {
+        System.out.println();
         displayHeaderPart();
         displaySalesData();
         displayPromotion();
