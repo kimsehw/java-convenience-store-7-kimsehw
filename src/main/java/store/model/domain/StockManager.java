@@ -81,21 +81,24 @@ public class StockManager {
 
     public PurchaseResponse getPurchaseResponseFrom(String requestProductName, int requestQuantity) {
         Products products = stock.get(requestProductName);
-        checkNotExistProductException(products);
+        checkNotExistProductException(requestProductName);
         PurchaseResponse purchaseResponse = products.checkQuantity(requestQuantity);
-        checkOverStockAmountException(purchaseResponse);
+        checkOverStockAmountException(requestProductName, requestQuantity);
         purchaseResponse.setName(requestProductName);
         return purchaseResponse;
     }
 
-    private void checkNotExistProductException(Products products) {
+    public void checkNotExistProductException(String requestProductName) {
+        Products products = stock.get(requestProductName);
         boolean isNotExistProduct = (products == null);
         if (isNotExistProduct) {
             throw new InputException(ExceptionType.NOT_EXIST_PRODUCT);
         }
     }
 
-    private static void checkOverStockAmountException(PurchaseResponse purchaseResponse) {
+    public void checkOverStockAmountException(String requestProductName, int requestQuantity) {
+        Products products = stock.get(requestProductName);
+        PurchaseResponse purchaseResponse = products.checkQuantity(requestQuantity);
         boolean isOverStock = purchaseResponse.getPurchaseResponseCode().equals(PurchaseResponseCode.OUT_OF_STOCK);
         if (isOverStock) {
             throw new InputException(ExceptionType.OVER_STOCK_AMOUNT);
@@ -121,7 +124,9 @@ public class StockManager {
         receipt.addSalesData(salesData);
     }
 
-    public ReceiptInformation getReceiptInformation(String membershipRespond) {
-        return receipt.getReceiptInformation(membershipRespond);
+    public ReceiptInformation getReceiptInformation(CustomerRespond membershipRespond) {
+        ReceiptInformation receiptInformation = receipt.getReceiptInformation(membershipRespond);
+        receipt = new Receipt();
+        return receiptInformation;
     }
 }
