@@ -15,7 +15,6 @@ import store.constant.ConstantBox;
 import store.model.domain.Promotion;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
-import store.model.domain.Receipt;
 
 class ProductsTest {
 
@@ -140,50 +139,48 @@ class ProductsTest {
         );
     }
 
-    @DisplayName("영수증 업데이트 기능 테스트")
+    @DisplayName("판매 데이터 생성 기능 테스트")
     @ParameterizedTest
     @MethodSource({"generateFreeRemindUpdateCase", "generatePartialUnavailableUpdateCase", "generateSuccessUpdateCase"})
-    void updateReceiptTest(String customerRespond, PurchaseResponse purchaseResponse,
-                           List<Integer> expectedQuantities, List<Integer> expectedPromotionCounts) {
-        Receipt receipt = new Receipt();
+    void getSalesDataByEachCaseTest(String customerRespond, PurchaseResponse purchaseResponse, int expectedQuantities,
+                                    int expectedPromotionCounts) {
+        setUpProducts();
+        PurchaseResponseCode purchaseResponseCode = purchaseResponse.getPurchaseResponseCode();
+        int promotionCount = purchaseResponse.getPromotionCount();
+        int restCount = purchaseResponse.getRestCount();
+        assertThat(products.getSalesDataByEachCase(customerRespond, purchaseResponseCode, restCount, promotionCount))
+                .extracting("name", "quantity", "price", "promotionCount")
+                .containsExactly(TEST_NAME, expectedQuantities, TEST_PRICE, expectedPromotionCounts);
+    }
+
+    void setUpProducts() {
         Promotion promotion = new Promotion(List.of("2+1", "2", "1", "startDate", "endDate"));
         promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_PROMOTION_QUANTITY, promotion);
         products = new Products(promotionProduct);
         products.add(new NormalProduct(TEST_NAME, TEST_PRICE, TEST_NORMAL_QUANTITY));
-        products.updateReceipt(receipt, customerRespond, purchaseResponse);
-        assertThat(receipt)
-                .extracting("names", "quantities", "prices", "promotionCounts")
-                .containsExactly(List.of(TEST_NAME), expectedQuantities, List.of(TEST_PRICE), expectedPromotionCounts);
     }
 
     static Stream<Arguments> generateFreeRemindUpdateCase() {
         return Stream.of(
-                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, 1, 2),
-                        List.of(6), List.of(2)),
-                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, 1, 2),
-                        List.of(5), List.of(1))
+                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, 1, 2), 6, 2),
+                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.FREE_PRODUCT_REMIND, 1, 2), 5, 1)
         );
     }
 
     static Stream<Arguments> generatePartialUnavailableUpdateCase() {
         return Stream.of(
-                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 2, 4),
-                        List.of(10), List.of(2)),
-                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 2, 4),
-                        List.of(6), List.of(2)),
-                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 1, 1),
-                        List.of(4), List.of(1)),
-                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 1, 1),
-                        List.of(3), List.of(1))
+                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 2, 4), 10,
+                        2),
+                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 2, 4), 6, 2),
+                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 1, 1), 4, 1),
+                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 1, 1), 3, 1)
         );
     }
 
     static Stream<Arguments> generateSuccessUpdateCase() {
         return Stream.of(
-                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, 2, 0),
-                        List.of(6), List.of(2)),
-                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, 0, 4),
-                        List.of(4), List.of(0))
+                Arguments.of("Y", new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, 2, 0), 6, 2),
+                Arguments.of("N", new PurchaseResponse(PurchaseResponseCode.PURCHASE_SUCCESS, 0, 4), 4, 0)
         );
     }
 }

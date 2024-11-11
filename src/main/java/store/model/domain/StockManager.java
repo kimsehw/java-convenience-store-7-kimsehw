@@ -22,10 +22,12 @@ public class StockManager {
 
     private Map<String, Products> stock;
     private Map<String, Promotion> promotions;
+    private Receipt receipt;
 
     public StockManager() throws IOException {
         readPromotionsFrom();
         readProductsFrom();
+        receipt = new Receipt();
     }
 
     public void readProductsFrom() throws IOException {
@@ -99,5 +101,16 @@ public class StockManager {
 
     public Map<String, Products> getStock() {
         return this.stock;
+    }
+
+    public void updateReceipt(String customerRespond, PurchaseResponse purchaseResponse) {
+        String productName = purchaseResponse.getName();
+        PurchaseResponseCode purchaseResponseCode = purchaseResponse.getPurchaseResponseCode();
+        int promotionCount = purchaseResponse.getPromotionCount();
+        int restCount = purchaseResponse.getRestCount();
+        Products products = stock.get(productName);
+        SalesData salesData = products.getSalesDataByEachCase(customerRespond, purchaseResponseCode, restCount,
+                promotionCount);
+        receipt.addSalesData(salesData);
     }
 }

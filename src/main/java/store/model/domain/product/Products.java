@@ -5,7 +5,6 @@ import java.util.List;
 import store.constant.ConstantBox;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
-import store.model.domain.Receipt;
 import store.model.domain.SalesData;
 
 public class Products {
@@ -91,57 +90,44 @@ public class Products {
         return new ProductsDisplayData(null, normalProductData);
     }
 
-    public void updateReceipt(Receipt receipt, String customerRespond, PurchaseResponse purchaseResponse) {
-        PurchaseResponseCode purchaseResponseCode = purchaseResponse.getPurchaseResponseCode();
-        int promotionCount = purchaseResponse.getPromotionCount();
-        int restCount = purchaseResponse.getRestCount();
-        updateByEachCase(receipt, customerRespond, purchaseResponseCode, restCount, promotionCount);
-    }
-
-    private void updateByEachCase(Receipt receipt, String customerRespond,
-                                  PurchaseResponseCode purchaseResponseCode, int restCount, int promotionCount) {
+    public SalesData getSalesDataByEachCase(String customerRespond, PurchaseResponseCode purchaseResponseCode,
+                                            int restCount, int promotionCount) {
         if (purchaseResponseCode.equals(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE)) {
-            updateInPartialUnavailableCase(receipt, customerRespond, restCount, promotionCount);
+            return getSalesDataInPartialUnavailableCase(customerRespond, restCount, promotionCount);
         }
         if (purchaseResponseCode.equals(PurchaseResponseCode.FREE_PRODUCT_REMIND)) {
-            updateInFreeProductRemindCase(receipt, customerRespond, restCount, promotionCount);
+            return getSalesDataInFreeProductRemindCase(customerRespond, restCount, promotionCount);
         }
         if (purchaseResponseCode.equals(PurchaseResponseCode.PURCHASE_SUCCESS)) {
-            updateInSuccessCase(receipt, promotionCount, restCount);
+            return getSalesDataInSuccessCase(promotionCount, restCount);
         }
+        return null;
     }
 
-    private void updateInSuccessCase(Receipt receipt, int promotionCount, int restCount) {
-        SalesData salesData;
+    private SalesData getSalesDataInSuccessCase(int promotionCount, int restCount) {
         if (promotionCount != NO_COUNT) {
-            salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
-            receipt.addSalesData(salesData);
-            return;
+            return getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
         }
-        salesData = getSalesDataFrom(NORMAL_INDEX, restCount, promotionCount);
-        receipt.addSalesData(salesData);
+        return getSalesDataFrom(NORMAL_INDEX, restCount, promotionCount);
     }
 
-    private void updateInFreeProductRemindCase(Receipt receipt, String customerRespond, int restCount,
-                                               int promotionCount) {
+    private SalesData getSalesDataInFreeProductRemindCase(String customerRespond, int restCount,
+                                                          int promotionCount) {
         if (customerRespond.equals(ConstantBox.CUSTOMER_RESPOND_Y)) {
             restCount = NO_COUNT;
             promotionCount++;
         }
-        SalesData salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
-        Product product;
-        product = products.get(NORMAL_INDEX);
-        receipt.addSalesData(salesData);
+        return getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
     }
 
-    private void updateInPartialUnavailableCase(Receipt receipt, String customerRespond, int restCount,
-                                                int promotionCount) {
+    private SalesData getSalesDataInPartialUnavailableCase(String customerRespond, int restCount,
+                                                           int promotionCount) {
         if (customerRespond.equals(ConstantBox.CUSTOMER_RESPOND_N)) {
             restCount = NO_COUNT;
         }
         SalesData salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
         reduceRestCountNormalProduct(salesData);
-        receipt.addSalesData(salesData);
+        return salesData;
     }
 
     private void reduceRestCountNormalProduct(SalesData salesData) {
