@@ -3,6 +3,7 @@ package store.model.domain;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -14,6 +15,7 @@ import store.exception.InputException;
 import store.model.domain.product.Product;
 import store.model.domain.product.ProductFactory;
 import store.model.domain.product.Products;
+import store.model.domain.product.ProductsDisplayData;
 
 public class StockManager {
 
@@ -99,8 +101,12 @@ public class StockManager {
         }
     }
 
-    public Map<String, Products> getStock() {
-        return this.stock;
+    public List<ProductsDisplayData> getDisplayDatas() {
+        List<ProductsDisplayData> displayDatas = new ArrayList<>();
+        for (Products products : stock.values()) {
+            displayDatas.add(products.getProductsData());
+        }
+        return displayDatas;
     }
 
     public void updateReceipt(String customerRespond, PurchaseResponse purchaseResponse) {
