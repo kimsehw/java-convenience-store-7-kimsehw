@@ -12,6 +12,7 @@ import java.util.Map;
 import store.constant.ConstantBox;
 import store.exception.ExceptionType;
 import store.exception.InputException;
+import store.model.domain.input.CustomerRespond;
 import store.model.domain.product.Product;
 import store.model.domain.product.ProductFactory;
 import store.model.domain.product.Products;
@@ -109,7 +110,7 @@ public class StockManager {
         return displayDatas;
     }
 
-    public void updateReceipt(String customerRespond, PurchaseResponse purchaseResponse) {
+    public void updateReceipt(CustomerRespond customerRespond, PurchaseResponse purchaseResponse) {
         String productName = purchaseResponse.getName();
         PurchaseResponseCode purchaseResponseCode = purchaseResponse.getPurchaseResponseCode();
         int promotionCount = purchaseResponse.getPromotionCount();

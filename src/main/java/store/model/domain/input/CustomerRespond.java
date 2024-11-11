@@ -31,4 +31,8 @@ public class CustomerRespond {
             throw new InputException(ExceptionType.INVALID_RESPOND_INPUT);
         }
     }
+
+    public boolean doesCustomerAgree() {
+        return customerRespond.equals(ConstantBox.CUSTOMER_RESPOND_Y);
+    }
 }

@@ -15,6 +15,7 @@ import store.constant.ConstantBox;
 import store.model.domain.Promotion;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
+import store.model.domain.input.CustomerRespond;
 
 class ProductsTest {
 
@@ -148,7 +149,9 @@ class ProductsTest {
         PurchaseResponseCode purchaseResponseCode = purchaseResponse.getPurchaseResponseCode();
         int promotionCount = purchaseResponse.getPromotionCount();
         int restCount = purchaseResponse.getRestCount();
-        assertThat(products.getSalesDataByEachCase(customerRespond, purchaseResponseCode, restCount, promotionCount))
+        assertThat(
+                products.getSalesDataByEachCase(new CustomerRespond(customerRespond), purchaseResponseCode, restCount,
+                        promotionCount))
                 .extracting("name", "quantity", "price", "promotionCount")
                 .containsExactly(TEST_NAME, expectedQuantities, TEST_PRICE, expectedPromotionCounts);
     }

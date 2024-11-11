@@ -6,6 +6,7 @@ import store.constant.ConstantBox;
 import store.model.domain.PurchaseResponse;
 import store.model.domain.PurchaseResponseCode;
 import store.model.domain.SalesData;
+import store.model.domain.input.CustomerRespond;
 
 public class Products {
 
@@ -90,7 +91,7 @@ public class Products {
         return new ProductsDisplayData(null, normalProductData);
     }
 
-    public SalesData getSalesDataByEachCase(String customerRespond, PurchaseResponseCode purchaseResponseCode,
+    public SalesData getSalesDataByEachCase(CustomerRespond customerRespond, PurchaseResponseCode purchaseResponseCode,
                                             int restCount, int promotionCount) {
         if (purchaseResponseCode.equals(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE)) {
             return getSalesDataInPartialUnavailableCase(customerRespond, restCount, promotionCount);
@@ -111,18 +112,18 @@ public class Products {
         return getSalesDataFrom(NORMAL_INDEX, restCount, promotionCount);
     }
 
-    private SalesData getSalesDataInFreeProductRemindCase(String customerRespond, int restCount,
+    private SalesData getSalesDataInFreeProductRemindCase(CustomerRespond customerRespond, int restCount,
                                                           int promotionCount) {
-        if (customerRespond.equals(ConstantBox.CUSTOMER_RESPOND_Y)) {
+        if (customerRespond.doesCustomerAgree()) {
             restCount = NO_COUNT;
             promotionCount++;
         }
         return getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
     }
 
-    private SalesData getSalesDataInPartialUnavailableCase(String customerRespond, int restCount,
+    private SalesData getSalesDataInPartialUnavailableCase(CustomerRespond customerRespond, int restCount,
                                                            int promotionCount) {
-        if (customerRespond.equals(ConstantBox.CUSTOMER_RESPOND_N)) {
+        if (!customerRespond.doesCustomerAgree()) {
             restCount = NO_COUNT;
         }
         SalesData salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
