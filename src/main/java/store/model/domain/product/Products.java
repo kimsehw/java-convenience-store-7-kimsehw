@@ -91,20 +91,20 @@ public class Products {
         return new ProductsDisplayData(null, normalProductData);
     }
 
-    public void updateReceipt(Receipt receipt, String CustomerRespond, PurchaseResponse purchaseResponse) {
+    public void updateReceipt(Receipt receipt, String customerRespond, PurchaseResponse purchaseResponse) {
         PurchaseResponseCode purchaseResponseCode = purchaseResponse.getPurchaseResponseCode();
         int promotionCount = purchaseResponse.getPromotionCount();
         int restCount = purchaseResponse.getRestCount();
-        updateByEachCase(receipt, CustomerRespond, purchaseResponseCode, restCount, promotionCount);
+        updateByEachCase(receipt, customerRespond, purchaseResponseCode, restCount, promotionCount);
     }
 
-    private void updateByEachCase(Receipt receipt, String CustomerRespond,
+    private void updateByEachCase(Receipt receipt, String customerRespond,
                                   PurchaseResponseCode purchaseResponseCode, int restCount, int promotionCount) {
         if (purchaseResponseCode.equals(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE)) {
-            updateInPartialUnavailableCase(receipt, CustomerRespond, restCount, promotionCount);
+            updateInPartialUnavailableCase(receipt, customerRespond, restCount, promotionCount);
         }
         if (purchaseResponseCode.equals(PurchaseResponseCode.FREE_PRODUCT_REMIND)) {
-            updateInFreeProductRemindCase(receipt, CustomerRespond, restCount, promotionCount);
+            updateInFreeProductRemindCase(receipt, customerRespond, restCount, promotionCount);
         }
         if (purchaseResponseCode.equals(PurchaseResponseCode.PURCHASE_SUCCESS)) {
             updateInSuccessCase(receipt, promotionCount, restCount);
@@ -122,9 +122,9 @@ public class Products {
         receipt.addSalesData(salesData);
     }
 
-    private void updateInFreeProductRemindCase(Receipt receipt, String CustomerRespond, int restCount,
+    private void updateInFreeProductRemindCase(Receipt receipt, String customerRespond, int restCount,
                                                int promotionCount) {
-        if (CustomerRespond.equals(ConstantBox.CUSTOMER_RESPOND_Y)) {
+        if (customerRespond.equals(ConstantBox.CUSTOMER_RESPOND_Y)) {
             restCount = NO_COUNT;
             promotionCount++;
         }
@@ -134,9 +134,9 @@ public class Products {
         receipt.addSalesData(salesData);
     }
 
-    private void updateInPartialUnavailableCase(Receipt receipt, String CustomerRespond, int restCount,
+    private void updateInPartialUnavailableCase(Receipt receipt, String customerRespond, int restCount,
                                                 int promotionCount) {
-        if (CustomerRespond.equals(ConstantBox.CUSTOMER_RESPOND_N)) {
+        if (customerRespond.equals(ConstantBox.CUSTOMER_RESPOND_N)) {
             restCount = NO_COUNT;
         }
         SalesData salesData = getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);

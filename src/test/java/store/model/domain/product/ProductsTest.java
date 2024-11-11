@@ -143,14 +143,14 @@ class ProductsTest {
     @DisplayName("영수증 업데이트 기능 테스트")
     @ParameterizedTest
     @MethodSource({"generateFreeRemindUpdateCase", "generatePartialUnavailableUpdateCase", "generateSuccessUpdateCase"})
-    void updateReceiptTest(String CustomerRespond, PurchaseResponse purchaseResponse,
+    void updateReceiptTest(String customerRespond, PurchaseResponse purchaseResponse,
                            List<Integer> expectedQuantities, List<Integer> expectedPromotionCounts) {
         Receipt receipt = new Receipt();
         Promotion promotion = new Promotion(List.of("2+1", "2", "1", "startDate", "endDate"));
         promotionProduct = new PromotionProduct(TEST_NAME, TEST_PRICE, TEST_PROMOTION_QUANTITY, promotion);
         products = new Products(promotionProduct);
         products.add(new NormalProduct(TEST_NAME, TEST_PRICE, TEST_NORMAL_QUANTITY));
-        products.updateReceipt(receipt, CustomerRespond, purchaseResponse);
+        products.updateReceipt(receipt, customerRespond, purchaseResponse);
         assertThat(receipt)
                 .extracting("names", "quantities", "prices", "promotionCounts")
                 .containsExactly(List.of(TEST_NAME), expectedQuantities, List.of(TEST_PRICE), expectedPromotionCounts);
