@@ -55,6 +55,7 @@ public class StockManager {
     private void addProduct(Map<String, Products> stock, String name, Product product) {
         if (!stock.containsKey(name)) {
             stock.put(name, new Products(product));
+            return;
         }
         if (stock.containsKey(name)) {
             stock.get(name).add(product);
