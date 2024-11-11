@@ -1,4 +1,4 @@
-package store.view;
+package store.view.inputview;
 
 public enum InputViewType {
 

@@ -1,4 +1,4 @@
-package store.view;
+package store.view.outputview;
 
 import java.util.List;
 import store.constant.ConstantBox;
