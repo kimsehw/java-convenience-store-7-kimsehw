@@ -102,7 +102,7 @@ public class Products {
         if (purchaseResponseCode.equals(PurchaseResponseCode.PURCHASE_SUCCESS)) {
             return getSalesDataInSuccessCase(promotionCount, restCount);
         }
-        return null;
+        return getSalesDataInUnavailablePromotionDateCase(promotionCount, restCount);
     }
 
     private SalesData getSalesDataInSuccessCase(int promotionCount, int restCount) {
@@ -110,6 +110,13 @@ public class Products {
             return getSalesDataFrom(PROMOTION_INDEX, restCount, promotionCount);
         }
         return getSalesDataFrom(NORMAL_INDEX, restCount, promotionCount);
+    }
+
+    private SalesData getSalesDataInUnavailablePromotionDateCase(int promotionCount, int restCount) {
+        PromotionProduct promotionProduct = (PromotionProduct) products.get(PROMOTION_INDEX);
+        SalesData salesData = promotionProduct.getSalesDataInIsNotOnPromotionDate(promotionCount, restCount);
+        reduceRestCountNormalProduct(salesData);
+        return salesData;
     }
 
     private SalesData getSalesDataInFreeProductRemindCase(CustomerRespond customerRespond, int restCount,

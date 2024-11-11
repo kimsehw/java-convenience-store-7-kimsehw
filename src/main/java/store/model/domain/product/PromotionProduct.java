@@ -8,6 +8,7 @@ import store.model.domain.SalesData;
 
 public class PromotionProduct implements Product {
 
+    public static final int NO_PROMOTION = 0;
     private final String name;
     private final int price;
     private int quantity;
@@ -30,7 +31,8 @@ public class PromotionProduct implements Product {
         if (promotion.isOnPromotion()) {
             return promotion.discount(requestQuantity, quantity);
         }
-        return new PurchaseResponse(PurchaseResponseCode.PROMOTION_PARTIAL_UNAVAILABLE, 0, requestQuantity);
+        return new PurchaseResponse(PurchaseResponseCode.UNAVAILABLE_PROMOTION_DATE,
+                requestQuantity, 0);
     }
 
     public void reduce(int requestQuantity) {
@@ -49,6 +51,19 @@ public class PromotionProduct implements Product {
             reduce(reduceQuantity);
         }
         return new SalesData(name, reduceQuantity, price, promotionCount, restCount);
+    }
+
+    public SalesData getSalesDataInIsNotOnPromotionDate(int promotionCount, int restCount) {
+        int promotionQuantity = promotionCount;
+        int reduceQuantity = promotionQuantity + restCount;
+        if (quantity < reduceQuantity) {
+            restCount = reduceQuantity - quantity;
+            quantity = Integer.parseInt(ConstantBox.NO_QUANTITY);
+        }
+        if (quantity >= reduceQuantity) {
+            reduce(reduceQuantity);
+        }
+        return new SalesData(name, reduceQuantity, price, NO_PROMOTION, restCount);
     }
 
     @Override
