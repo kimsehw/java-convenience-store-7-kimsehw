@@ -18,9 +18,9 @@ import store.view.outputview.OutputViewFactory;
 
 public class StoreController {
 
-    private static InputView inputView;
-    private static OutputView outputView;
-    private static StockManager stockManager;
+    private InputView inputView;
+    private OutputView outputView;
+    private StockManager stockManager;
 
     public StoreController(InputView inputView, StockManager stockManager) {
         this.inputView = inputView;
