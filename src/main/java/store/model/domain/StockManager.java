@@ -113,4 +113,8 @@ public class StockManager {
                 promotionCount);
         receipt.addSalesData(salesData);
     }
+
+    public ReceiptInformation getReceiptInformation(String membershipRespond) {
+        return receipt.getReceiptInformation(membershipRespond);
+    }
 }
